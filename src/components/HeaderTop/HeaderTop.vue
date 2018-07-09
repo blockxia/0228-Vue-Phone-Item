@@ -1,8 +1,6 @@
 <template>
   <header class="header">
-         <!-- <span class="header_search">
-            <i class="iconfont icon-sousuo"></i>
-          </span>-->
+
     <slot name="left"></slot>
     <span class="header_title">
           <span class="header_title_text ellipsis">{{title}}</span>
