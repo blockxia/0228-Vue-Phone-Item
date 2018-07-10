@@ -16,20 +16,21 @@ export const reqShops=({latitude, longitude})=>ajax('/api/shops',{latitude, long
 // [4、根据经纬度和关键字搜索商铺列表](#4根据经纬度和关键字搜索商铺列表)<br/>
 export const reqSearchShops=({geohash,keyword})=>ajax('/api/search_shops',{geohash,keyword})
 
-// [5、获取一次性验证码](#5获取一次性验证码)<br/>
-export const reqOnce=()=>ajax('/api/captcha')
+
 
 // [6、用户名密码登陆](#6用户名密码登陆)<br/>
-export const reqLogin=({name,pwd,captcha})=>ajax('/api/login_pwd',{name,pwd,captcha},'POST')
+export const reqPwdLogin=(name,pwd,captcha)=>ajax('/api/login_pwd',{name,pwd,captcha},'POST')
 
 // [7、发送短信验证码](#7发送短信验证码)<br/>
 export const reqSendMsg=(phone)=>ajax('/api/sendcode',phone)
 
 // [8、手机号验证码登陆](#8手机号验证码登陆)<br/>
-export const reqPhoneLogin=({phone,code})=>ajax('/api/login_sms',{phone,code},'POST')
+export const reqSmsLogin=({phone,code})=>ajax('/api/login_sms',{phone,code},'POST')
 
 // [9、根据会话获取用户信息](#9根据会话获取用户信息)<br/>
-export const reqUsersInfo=()=>ajax('/api/userinfo')
+export const reqUser=()=>ajax('/api/userinfo')
 
 // [10、用户登出](#10用户登出)<br/>
-export const reqLogout=()=>ajax('/logout')
+export const reqLogout=()=>ajax('/api/logout')
+
+export const reqSendCode=(phone)=>ajax('/api/sendcode',{phone})

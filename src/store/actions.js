@@ -1,12 +1,14 @@
 import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
-  RECEIVE_SHOPS
+  RECEIVE_SHOPS,
+  RECEIVE_USER
 } from './mutation-types'
 import {
   reqAddress,
   reqFoodTypes,
-  reqShops
+  reqShops,
+  reqUser
 } from  '../api'
 export default {
 //异步获取地址信息的异步action
@@ -38,6 +40,18 @@ export default {
     if(result.code===0){
       const shops=result.data
       commit(RECEIVE_SHOPS,{shops})
+    }
+  },
+//同步保存user
+  saveUser({commit},user){
+    commit(RECEIVE_USER,{user})
+  },
+
+  async getUser({commit}){
+    const result = await reqUser()
+    if(result.code===0){
+      const user=result.data
+      commit(RECEIVE_USER,{user})
     }
   }
 }
