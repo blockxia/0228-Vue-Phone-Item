@@ -1,6 +1,6 @@
 import {
   RECEIVE_ADDRESS,
-  RECEIVE_CATEGORYS,
+  RECEIVE_CATEGORYS, RECEIVE_INFO, RECEIVE_RATINGS,
   RECEIVE_SHOPS,
   RECEIVE_USER,
   RESET_USER
@@ -10,7 +10,10 @@ import {
   reqFoodTypes,
   reqShops,
   reqUser,
-  reqLogout
+  reqLogout,
+  reqShopGoods,
+  reqShopRatings,
+  reqShopInfo
 } from  '../api'
 export default {
 //异步获取地址信息的异步action
@@ -48,7 +51,7 @@ export default {
   saveUser({commit},user){
     commit(RECEIVE_USER,{user})
   },
-
+//自动登录实现，获取user_id,传给服务器session，保存cookies的maxAge时间
   async getUser({commit}){
     const result = await reqUser()
     if(result.code===0){
@@ -56,10 +59,38 @@ export default {
       commit(RECEIVE_USER,{user})
     }
   },
+  //异步请求退出登陆
   async logout({commit}){
     const result=await reqLogout()
     if(result.code===0){
       commit(RESET_USER)
     }
+  },
+  // 异步获取商品列表
+   async getShopGoods({commit}){
+      const result=await reqShopGoods()
+     if(result.code===0){
+        const goods=result.data
+        commit(RECEIVE_SHOPS,{goods})
+     }
+   },
+
+  // 异步获取评价列表
+  async getShopRatings({commit}){
+    const result=await reqShopRatings()
+    if(result.code===0){
+      const ratings=result.data
+      commit(RECEIVE_RATINGS,{ratings})
+    }
+  },
+
+  // 异步获取商家信息
+  async getShopInfo({commit}){
+    const result=await reqShopInfo()
+    if(result.code===0){
+      const info=result.data
+      commit(RECEIVE_INFO,{info})
+    }
   }
+
 }

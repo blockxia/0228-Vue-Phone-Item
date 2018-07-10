@@ -34,3 +34,7 @@ export const reqUser=()=>ajax('/api/userinfo')
 export const reqLogout=()=>ajax('/api/logout')
 
 export const reqSendCode=(phone)=>ajax('/api/sendcode',{phone})
+
+export const reqShopInfo=()=>ajax('/info')
+export const reqShopGoods=()=>ajax('/goods')
+export const reqShopRatings=()=>ajax('/ratings')

@@ -6,10 +6,10 @@
         <router-link to="/shop/goods">点餐</router-link>
       </div>
       <div class="tab-item">
-        <router-link to="/shop/ratings">点餐</router-link>
+        <router-link to="/shop/ratings">评论</router-link>
       </div>
       <div class="tab-item">
-        <router-link to="/shop/info">点餐</router-link>
+        <router-link to="/shop/info">商家</router-link>
       </div>
     </div>
     <router-view/>
@@ -19,6 +19,11 @@
 <script>
   import ShopHeader from '../../components/ShopHeader/ShopHeader.vue'
   export default {
+    mounted(){
+      this.$store.dispatch('getShopInfo')
+      this.$store.dispatch('getShopRatings')
+      this.$store.dispatch('getShopGoods')
+    },
     components:{
       ShopHeader
     }
