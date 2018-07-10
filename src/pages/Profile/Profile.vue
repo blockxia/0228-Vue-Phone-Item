@@ -91,18 +91,34 @@
         </div>
       </a>
     </section>
+
+    <section>
+     <mt-button style="width: 100%" type="danger"  v-show="user._id" @click="logout">退出登陆</mt-button>
+    </section>
   </section>
+
 </template>
 
 <script>
+  import {MessageBox} from 'mint-ui'
   import {mapState} from 'vuex'
   import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
+  import MtButton from "../../../node_modules/mint-ui/packages/button/src/button.vue";
 
   export default {
     computed:{
       ...mapState(['user'])
     },
+    methods:{
+      logout(){
+        MessageBox.confirm('确定退出吗?').then(action => {
+          this.$store.dispatch('logout')
+
+        },()=>{console.log('点击取消了');});
+      }
+    },
     components:{
+      MtButton,
       HeaderTop
     }
   }
