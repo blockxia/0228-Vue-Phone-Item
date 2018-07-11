@@ -1,6 +1,6 @@
 import {
   RECEIVE_ADDRESS,
-  RECEIVE_CATEGORYS, RECEIVE_INFO, RECEIVE_RATINGS,
+  RECEIVE_CATEGORYS, RECEIVE_GOODS, RECEIVE_INFO, RECEIVE_RATINGS,
   RECEIVE_SHOPS,
   RECEIVE_USER,
   RESET_USER
@@ -67,11 +67,12 @@ export default {
     }
   },
   // 异步获取商品列表
-   async getShopGoods({commit}){
+   async getShopGoods({commit},cb){
       const result=await reqShopGoods()
      if(result.code===0){
         const goods=result.data
-        commit(RECEIVE_SHOPS,{goods})
+        commit(RECEIVE_GOODS,{goods})
+        cb && cb()
      }
    },
 
