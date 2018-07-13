@@ -3,7 +3,10 @@ import {
   RECEIVE_CATEGORYS, RECEIVE_GOODS, RECEIVE_INFO, RECEIVE_RATINGS,
   RECEIVE_SHOPS,
   RECEIVE_USER,
-  RESET_USER
+  RESET_USER,
+  DECERMENT_FOOD_COUNT,
+  INCERMENT_FOOD_COUNT,
+  CLEAR_CART
 } from './mutation-types'
 import {
   reqAddress,
@@ -77,21 +80,34 @@ export default {
    },
 
   // 异步获取评价列表
-  async getShopRatings({commit}){
+  async getShopRatings({commit},cb){
     const result=await reqShopRatings()
     if(result.code===0){
       const ratings=result.data
       commit(RECEIVE_RATINGS,{ratings})
+      cb && cb()
     }
   },
 
   // 异步获取商家信息
-  async getShopInfo({commit}){
+  async getShopInfo({commit},cb){
     const result=await reqShopInfo()
     if(result.code===0){
       const info=result.data
       commit(RECEIVE_INFO,{info})
+      cb && cb()
     }
-  }
+  },
+  // 同步更新指定food数量
+  updateFoodCount({commit},{isAdd,food}){
+    if(isAdd){
+      commit(INCERMENT_FOOD_COUNT,{food})
+    }else{
+      commit(DECERMENT_FOOD_COUNT,{food})
+    }
+  },
 
+  clearCart({commit}){
+    commit(CLEAR_CART)
+  }
 }

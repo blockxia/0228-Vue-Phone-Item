@@ -3,7 +3,10 @@
     <div class="goods">
       <div class="menu-wrapper">
         <ul>
-          <li class="menu-item " v-for="(good,index) in goods" :key="index">
+          <!--current-->
+          <li class="menu-item "  v-for="(good,index) in goods" :key="index"
+              :class="{current: index===currentIndex}"  @click="clickItem(index)"
+          >
             <img class="icon" v-if="good.icon" :src="good.icon">
             <span class="text bottom-border-1px">{{good.name}}</span>
           </li>
@@ -11,11 +14,12 @@
         </ul>
       </div>
       <div class="foods-wrapper">
-        <ul>
-          <li class="food-list food-list-hook" v-for="(good,index) in goods" :key="index">
+        <ul ref="foodsUl">
+          <li class="food-list-hook" v-for="(good,index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(food,index) in good.foods" :key="index">
+              <li class="food-item bottom-border-1px" v-for="(food,index) in good.foods"
+                  :key="index" @click="showFood(food)">
                 <div class="icon">
                   <img width="57" height="57"
                        :src="food.icon">
@@ -31,7 +35,7 @@
                     <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl组件
+                    <CartControl :food="food"/>
                   </div>
                 </div>
               </li>
@@ -39,27 +43,102 @@
           </li>
         </ul>
       </div>
+      <ShopCart/>
     </div>
+
+    <Food :food="food" ref="food"/>
   </div>
 </template>
 
 <script>
   import BScroll from 'better-scroll'
   import {mapState} from 'vuex'
+
+  import CartControl from '../../../components/CartControl/CartControl.vue'
+  import Food from '../../../components/Food/Food.vue'
+  import ShopCart from '../../../components/ShopCart/ShopCart.vue'
   export default {
+    data(){
+      return{
+        scrollY: 0, // 滚动的y轴坐标
+        tops: [], // 所有li的top组成的数组
+        food: {}, //当前选择的food
+      }
+    },
     mounted(){
       this.$store.dispatch('getShopGoods',()=>{
         this.$nextTick(()=>{
-          new BScroll('.menu-wrapper')
-          new BScroll('.foods-wrapper')
+          this._initScroll()
+          this._initTops()
         })
       })
 
     },
     computed:{
-      ...mapState(['goods'])
+      ...mapState(['goods']),
+      currentIndex(){
+        const {scrollY,tops}=this
+        return tops.findIndex((top,index)=>{
+          // 0, 3, 7, 10, 16
+          // 8   [top, nextTop)
+          return scrollY>=top && scrollY<tops[index+1]
+        })
+      }
     },
+    methods:{
+      _initScroll(){
+        new BScroll('.menu-wrapper',{
+          click:true
+        })
+        this.foodsScroll=new BScroll('.foods-wrapper',{
+          probeType: 2 // 因为惯性滑动不会触发
+        })
+        // 给右侧滚动对象绑定滚动的监听
+        this.foodsScroll.on('scroll',({x,y})=>{
+          console.log('scroll',x, y)
+          this.scrollY=Math.abs(y)
+        })
+        this.foodsScroll.on('scrollEnd',({x,y})=>{
+          console.log('scrollEnd', x, y)
+          this.scrollY=Math.abs(y)
+        })
+      },
+      _initTops(){
+        const tops=[]
+        // 遍历所有li, 累加高度生成top, 并保存到tops中
+        const lis=this.$refs.foodsUl.getElementsByClassName('food-list-hook')
+        let top=0
+        tops.push(top)
+        Array.from(lis).forEach((li)=>{
+          top+=li.clientHeight
+          tops.push(top)
+        })
+        // 更新tops数据
+        this.tops=tops
+      },
 
+      clickItem(index){
+        // 得到对应的y
+          const y=-this.tops[index]
+        // 立即更新scrollY---> 更新当前分类
+          this.scrollY=-y
+        // 平滑滚动到对应的位置
+
+        this.foodsScroll.scrollTo(0,y,500)
+      },
+      showFood(food){
+        // 更新food数据
+          this.food=food
+        // 显示food组件界面
+        this.$refs.food.toggleShow()
+      }
+
+    },
+    components:{
+      CartControl,
+      ShopCart,
+      Food
+    }
   }
 </script>
 

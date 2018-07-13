@@ -7,3 +7,7 @@ export const RESET_USER ='reset_user'//重置用户
 export const RECEIVE_GOODS='receive_goods'//接收商品列表
 export const RECEIVE_RATINGS='receive_ratings'//接收评论列表
 export const RECEIVE_INFO='receive_info'//接收商家列表
+
+export const INCERMENT_FOOD_COUNT='incerment_food_count'
+export const DECERMENT_FOOD_COUNT='decerment_food_count'
+export const CLEAR_CART='clear_cart'
